@@ -7,10 +7,13 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import services.IngredientService;
 import services.OrderService;
 import services.UserService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -42,16 +45,25 @@ public class OrderCreationTests {
 
     @Test
     @Step("Создание заказа с авторизацией и ингредиентами")
-    public void shouldCreateOrderWithIngredients() {
-        OrderCreationDTO order = new OrderCreationDTO(Arrays.asList("61c0c5a71d1f82001bdaaa6d", "61c0c5a71d1f82001bdaaa70"));
+    public void shouldCreateOrderWithIngredients() throws Exception {
+        OrderCreationDTO order = this.getDefaultBurger();
         Response response = orderService.createOrder(token, order);
         response.then().statusCode(200).body("success", equalTo(true));
     }
 
+    private OrderCreationDTO getDefaultBurger() throws Exception {
+        IngredientService service = new IngredientService();
+        List<String> ingridients = new ArrayList<>();
+        ingridients.add(service.getIngridientName("Флюоресцентная булка R2-D3"));
+        ingridients.add(service.getIngridientName("Говяжий метеорит (отбивная)"));
+
+        return new OrderCreationDTO(ingridients);
+    }
+
     @Test
     @Step("Создание заказа без авторизации")
-    public void shouldReturnErrorForUnauthorizedUser() {
-        OrderCreationDTO order = new OrderCreationDTO(Arrays.asList("61c0c5a71d1f82001bdaaa6d", "61c0c5a71d1f82001bdaaa70"));
+    public void shouldReturnErrorForUnauthorizedUser() throws Exception {
+        OrderCreationDTO order = this.getDefaultBurger();
         Response response = orderService.createOrder("", order);
         response.then().statusCode(401).body("message", equalTo("You should be authorised"));
     }
