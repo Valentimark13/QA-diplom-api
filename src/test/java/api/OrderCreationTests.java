@@ -3,6 +3,7 @@ package api;
 import dto.OrderCreationDTO;
 import dto.UserDTO;
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -44,13 +45,14 @@ public class OrderCreationTests {
     }
 
     @Test
-    @Step("Создание заказа с авторизацией и ингредиентами")
+    @DisplayName("Создание заказа с авторизацией и ингредиентами")
     public void shouldCreateOrderWithIngredients() throws Exception {
         OrderCreationDTO order = this.getDefaultBurger();
         Response response = orderService.createOrder(token, order);
         response.then().statusCode(200).body("success", equalTo(true));
     }
 
+    @Step("Генерация данных для бургера")
     private OrderCreationDTO getDefaultBurger() throws Exception {
         IngredientService service = new IngredientService();
         List<String> ingridients = new ArrayList<>();
@@ -61,7 +63,7 @@ public class OrderCreationTests {
     }
 
     @Test
-    @Step("Создание заказа без авторизации")
+    @DisplayName("Создание заказа без авторизации")
     public void shouldReturnErrorForUnauthorizedUser() throws Exception {
         OrderCreationDTO order = this.getDefaultBurger();
         Response response = orderService.createOrder("", order);

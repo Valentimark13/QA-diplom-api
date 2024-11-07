@@ -1,6 +1,8 @@
 package api;
 
 import dto.UserDTO;
+import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +28,7 @@ public class UserDataUpdateTests {
     }
 
     @After
+    @Step("Удаление пользователя после теста")
     public void tearDown() {
         if (user != null) {
             userService.deleteUser(token);
@@ -33,6 +36,7 @@ public class UserDataUpdateTests {
     }
 
     @Test
+    @DisplayName("Успешное обновление данных пользователя")
     public void shouldUpdateUserDataSuccessfully() {
         UserDTO user = new UserDTO("updated.user@example.com", "password123", "UpdatedUser");
         Response response = userService.updateUser(token, user);

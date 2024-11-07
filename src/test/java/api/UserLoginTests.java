@@ -2,6 +2,7 @@ package api;
 
 import dto.UserDTO;
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +32,7 @@ public class UserLoginTests {
     }
 
     @After
+    @Step("Удаление пользователя после теста")
     public void tearDown() {
         if (user != null) {
             userService.deleteUser(token);
@@ -38,12 +40,14 @@ public class UserLoginTests {
     }
 
     @Test
+    @DisplayName("Успешная авторизация пользователя")
     public void shouldLoginSuccessfully() {
         Response response = userService.loginUser(user);
         assertLoginSuccess(response);
     }
 
     @Test
+    @DisplayName("Должна возвращаться ошибка при неверных авторизационных данных")
     public void shouldReturnErrorForInvalidCredentials() {
         UserDTO invalidUser = new UserDTO("wrong.email@example.com", "wrongPassword", "InvalidName");
         Response response = userService.loginUser(invalidUser);
@@ -51,6 +55,7 @@ public class UserLoginTests {
     }
 
     @Test
+    @DisplayName("Должна возвращаться ошибка при пропущенных полях")
     public void shouldReturnErrorForMissingFields() {
         UserDTO incompleteUser = new UserDTO("", "", "");
         Response response = userService.loginUser(incompleteUser);

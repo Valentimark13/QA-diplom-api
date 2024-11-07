@@ -2,6 +2,7 @@ package api;
 
 import dto.UserDTO;
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class UserRegistrationTests {
     }
 
     @Test
-    @Step("Создание уникального пользователя")
+    @DisplayName("Создание уникального пользователя")
     public void shouldCreateUniqueUser() {
         String login = UserService.generateRandomString(8) + "@example.com";
         String password = UserService.generateRandomString(10);
@@ -39,7 +40,7 @@ public class UserRegistrationTests {
     }
 
     @Test
-    @Step("Попытка создать уже зарегистрированного пользователя")
+    @DisplayName("Попытка создать уже зарегистрированного пользователя")
     public void shouldReturnErrorForDuplicateUser() {
         String login = UserService.generateRandomString(8) + "@example.com";
         String password = UserService.generateRandomString(10);
